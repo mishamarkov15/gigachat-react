@@ -1,25 +1,15 @@
-import { KeyboardEvent, useEffect, useRef, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import { Button } from "../ui/Button";
 
 type InputAreaProps = {
   isLoading: boolean;
+  onStop: () => void;
   onSubmit: (value: string) => void;
 };
 
-export function InputArea({ isLoading, onSubmit }: InputAreaProps) {
+export function InputArea({ isLoading, onStop, onSubmit }: InputAreaProps) {
   const [value, setValue] = useState("");
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const canSubmit = value.trim().length > 0 && !isLoading;
-
-  useEffect(() => {
-    const textarea = textareaRef.current;
-    if (!textarea) {
-      return;
-    }
-
-    textarea.style.height = "auto";
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 120)}px`;
-  }, [value]);
 
   const submit = () => {
     if (!canSubmit) {
@@ -45,8 +35,13 @@ export function InputArea({ isLoading, onSubmit }: InputAreaProps) {
         submit();
       }}
     >
-      <Button aria-label="Прикрепить изображение" type="button" variant="ghost">
-        img
+      <Button
+        aria-label="Прикрепить изображение"
+        className="input-area__attach"
+        type="button"
+        variant="ghost"
+      >
+        <span aria-hidden="true">📎</span>
       </Button>
       <textarea
         aria-label="Сообщение"
@@ -54,16 +49,28 @@ export function InputArea({ isLoading, onSubmit }: InputAreaProps) {
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={isLoading ? "GigaChat отвечает..." : "Введите сообщение"}
-        ref={textareaRef}
-        rows={1}
+        rows={2}
         value={value}
       />
-      <Button disabled={!isLoading} type="button" variant="secondary">
-        Стоп
-      </Button>
-      <Button disabled={!canSubmit} type="submit" variant="primary">
-        Отправить
-      </Button>
+      {isLoading ? (
+        <Button
+          className="input-area__action"
+          onClick={onStop}
+          type="button"
+          variant="secondary"
+        >
+          Стоп
+        </Button>
+      ) : (
+        <Button
+          className="input-area__action"
+          disabled={!canSubmit}
+          type="submit"
+          variant="primary"
+        >
+          Отправить
+        </Button>
+      )}
     </form>
   );
 }
