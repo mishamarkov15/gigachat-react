@@ -1,70 +1,65 @@
-# Getting Started with Create React App
+# GigaChat UI
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Статичная оболочка будущего чат-приложения для домашнего задания по теме React, JSX, компоненты и props.
 
-## Available Scripts
+Проект сделан на React + TypeScript. В приложении используются только моковые данные, без запросов к GigaChat API и без хранения данных.
 
-In the project directory, you can run:
+## Что реализовано
 
-### `npm start`
+- экран авторизации с валидацией поля Credentials;
+- основной layout с боковой панелью и областью чата;
+- адаптивный sidebar с burger-кнопкой на мобильных экранах;
+- список моковых чатов, активное состояние, hover-кнопки редактирования и удаления;
+- окно чата с моковыми сообщениями пользователя и ассистента;
+- markdown-рендеринг сообщений через `react-markdown`;
+- индикатор печати `TypingIndicator`;
+- нижняя форма ввода с textarea, кнопками отправки, стопа и прикрепления изображения;
+- drawer настроек модели;
+- светлая и тёмная темы через CSS-переменные.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Требования
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- Node.js
+- npm
 
-### `npm test`
+Проект создан на Create React App. В текущем окружении может появляться предупреждение npm о версии Node.js, но сборка и тесты проходят.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Установка
 
-### `npm run build`
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Запуск в режиме разработки
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+После запуска откройте приложение в браузере:
 
-### `npm run eject`
+[http://localhost:3000](http://localhost:3000)
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Сборка проекта
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Готовая production-сборка появится в папке `build`.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Запуск тестов
 
-## Learn More
+```bash
+npm test -- --watchAll=false
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Как посмотреть основной интерфейс
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+При первом открытии показывается экран авторизации. Чтобы перейти в чат:
 
-### Code Splitting
+1. Введите любой непустой текст в поле `Credentials`.
+2. Выберите любой `Scope`.
+3. Нажмите `Войти`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+После этого откроется статичная оболочка чат-приложения с моковыми чатами и сообщениями.
