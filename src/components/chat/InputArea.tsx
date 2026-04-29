@@ -2,13 +2,14 @@ import { KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Button } from "../ui/Button";
 
 type InputAreaProps = {
+  isLoading: boolean;
   onSubmit: (value: string) => void;
 };
 
-export function InputArea({ onSubmit }: InputAreaProps) {
+export function InputArea({ isLoading, onSubmit }: InputAreaProps) {
   const [value, setValue] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const canSubmit = value.trim().length > 0;
+  const canSubmit = value.trim().length > 0 && !isLoading;
 
   useEffect(() => {
     const textarea = textareaRef.current;
@@ -49,14 +50,15 @@ export function InputArea({ onSubmit }: InputAreaProps) {
       </Button>
       <textarea
         aria-label="Сообщение"
+        disabled={isLoading}
         onChange={(event) => setValue(event.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder="Введите сообщение"
+        placeholder={isLoading ? "GigaChat отвечает..." : "Введите сообщение"}
         ref={textareaRef}
         rows={1}
         value={value}
       />
-      <Button type="button" variant="secondary">
+      <Button disabled={!isLoading} type="button" variant="secondary">
         Стоп
       </Button>
       <Button disabled={!canSubmit} type="submit" variant="primary">
