@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { mockChats, mockMessages } from "../../data/mockData";
+import { mockChats } from "../../data/mockData";
 import { ChatWindow } from "../chat/ChatWindow";
 import { SettingsPanel } from "../settings/SettingsPanel";
 import { Sidebar } from "../sidebar/Sidebar";
@@ -38,7 +38,6 @@ export function AppLayout({ isDarkTheme, onThemeChange }: AppLayoutProps) {
       />
       <ChatWindow
         chat={activeChat}
-        messages={mockMessages}
         onOpenSettings={() => setIsSettingsOpen(true)}
       />
       <SettingsPanel

@@ -1,4 +1,5 @@
-import type { Chat, ChatMessage } from "../types/chat";
+import type { Chat } from "../types/chat";
+import type { ChatMessage } from "../types/message";
 
 export const mockChats: Chat[] = [
   {
@@ -31,38 +32,48 @@ export const mockChats: Chat[] = [
 export const mockMessages: ChatMessage[] = [
   {
     id: "m1",
-    senderName: "Вы",
-    variant: "user",
-    text: "Помоги составить **структуру React-приложения** для чата."
+    role: "user",
+    content: "Помоги составить **структуру React-приложения** для чата.",
+    timestamp: "10:12"
   },
   {
     id: "m2",
-    senderName: "GigaChat",
-    variant: "assistant",
-    text: "Начните с базовых зон:\n\n- Sidebar для списка диалогов\n- ChatWindow для сообщений\n- SettingsPanel для параметров модели"
+    role: "assistant",
+    content:
+      "Начните с базовых зон:\n\n- Sidebar для списка диалогов\n- ChatWindow для сообщений\n- SettingsPanel для параметров модели",
+    timestamp: "10:13"
   },
   {
     id: "m3",
-    senderName: "Вы",
-    variant: "user",
-    text: "А как лучше показать markdown в сообщениях?"
+    role: "user",
+    content: "А как лучше показать markdown в сообщениях?",
+    timestamp: "10:15"
   },
   {
     id: "m4",
-    senderName: "GigaChat",
-    variant: "assistant",
-    text: "Для этого удобно подключить *react-markdown*. Например:\n\n```tsx\n<ReactMarkdown>{message.text}</ReactMarkdown>\n```"
+    role: "assistant",
+    content:
+      "Для этого удобно подключить *react-markdown*. Например:\n\n```tsx\n<ReactMarkdown>{message.content}</ReactMarkdown>\n```",
+    timestamp: "10:16"
   },
   {
     id: "m5",
-    senderName: "Вы",
-    variant: "user",
-    text: "Добавь ещё состояния для ожидания ответа и пустого чата."
+    role: "user",
+    content: "Добавь ещё состояния для ожидания ответа и пустого чата.",
+    timestamp: "10:18"
   },
   {
     id: "m6",
-    senderName: "GigaChat",
-    variant: "assistant",
-    text: "Для ожидания ответа подойдёт `TypingIndicator`, а для пустого диалога — компонент `EmptyState` с понятным текстом."
+    role: "assistant",
+    content:
+      "Для ожидания ответа подойдёт `TypingIndicator`, а для пустого диалога — компонент `EmptyState` с понятным текстом.",
+    timestamp: "10:19"
   }
+];
+
+export const mockAssistantReplies = [
+  "Принял. Для следующего шага можно вынести состояние сообщений в `ChatWindow` и передавать список вниз через props.",
+  "Готово: пользовательское сообщение добавляется сразу, а ответ ассистента можно симулировать через `setTimeout`.",
+  "Хорошая идея. Ещё стоит блокировать поле ввода на время генерации, чтобы не создавать несколько параллельных мок-ответов.",
+  "Для автоскролла добавьте пустой `div` в конце списка и вызывайте `scrollIntoView` после изменения массива сообщений."
 ];
