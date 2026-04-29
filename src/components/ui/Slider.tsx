@@ -1,4 +1,4 @@
-import type { CSSProperties, InputHTMLAttributes } from "react";
+import type { InputHTMLAttributes } from "react";
 
 type SliderProps = Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "value"> & {
   label: string;
@@ -9,9 +9,9 @@ export function Slider({ label, value, ...props }: SliderProps) {
   const min = Number(props.min ?? 0);
   const max = Number(props.max ?? 100);
   const progress = ((value - min) / (max - min)) * 100;
-  const sliderStyle = {
-    "--slider-progress": `${Math.max(0, Math.min(100, progress))}%`
-  } as CSSProperties;
+  const progressClass = `slider--progress-${Math.round(
+    Math.max(0, Math.min(100, progress)) / 5
+  ) * 5}`;
 
   return (
     <label className="field field--slider">
@@ -20,8 +20,7 @@ export function Slider({ label, value, ...props }: SliderProps) {
         <strong>{Number.isInteger(value) ? value : value.toFixed(2)}</strong>
       </span>
       <input
-        className="slider"
-        style={sliderStyle}
+        className={`slider ${progressClass}`}
         type="range"
         value={value}
         {...props}

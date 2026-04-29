@@ -38,6 +38,10 @@ export function ChatWindow({ chat, onOpenSettings }: ChatWindowProps) {
   }, []);
 
   const handleSubmit = (content: string) => {
+    if (isLoading) {
+      return;
+    }
+
     const userMessage = createMessage("user", content);
 
     setMessages((currentMessages) => [...currentMessages, userMessage]);
@@ -54,6 +58,15 @@ export function ChatWindow({ chat, onOpenSettings }: ChatWindowProps) {
       setIsLoading(false);
       timeoutRef.current = null;
     }, 1400);
+  };
+
+  const handleStop = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+      timeoutRef.current = null;
+    }
+
+    setIsLoading(false);
   };
 
   return (
@@ -76,7 +89,11 @@ export function ChatWindow({ chat, onOpenSettings }: ChatWindowProps) {
         </Button>
       </header>
       <MessageList isLoading={isLoading} messages={messages} />
-      <InputArea isLoading={isLoading} onSubmit={handleSubmit} />
+      <InputArea
+        isLoading={isLoading}
+        onStop={handleStop}
+        onSubmit={handleSubmit}
+      />
     </main>
   );
 }

@@ -341,7 +341,8 @@
 }
 
 .message:hover .message__copy,
-.message:focus-within .message__copy {
+.message:focus-within .message__copy,
+.message__copy--copied {
   opacity: 1;
 }
 
@@ -412,7 +413,7 @@
 
 .input-area {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 10px;
   align-items: end;
   padding: 16px 24px;
@@ -423,6 +424,18 @@
 .input-area textarea {
   min-height: 42px;
   max-height: 120px;
+}
+
+.input-area__attach {
+  width: 42px;
+  min-height: 42px;
+  padding: 0;
+  font-size: 18px;
+}
+
+.input-area textarea:disabled {
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
 }
 
 .settings-layer,
@@ -496,9 +509,93 @@
   border-radius: 999px;
   background: linear-gradient(
     to right,
-    var(--color-primary) 0 var(--slider-progress),
-    var(--color-surface-muted) var(--slider-progress) 100%
+    var(--color-primary) 0 var(--slider-progress, 0%),
+    var(--color-surface-muted) var(--slider-progress, 0%) 100%
   );
+}
+
+.slider--progress-0 {
+  --slider-progress: 0%;
+}
+
+.slider--progress-5 {
+  --slider-progress: 5%;
+}
+
+.slider--progress-10 {
+  --slider-progress: 10%;
+}
+
+.slider--progress-15 {
+  --slider-progress: 15%;
+}
+
+.slider--progress-20 {
+  --slider-progress: 20%;
+}
+
+.slider--progress-25 {
+  --slider-progress: 25%;
+}
+
+.slider--progress-30 {
+  --slider-progress: 30%;
+}
+
+.slider--progress-35 {
+  --slider-progress: 35%;
+}
+
+.slider--progress-40 {
+  --slider-progress: 40%;
+}
+
+.slider--progress-45 {
+  --slider-progress: 45%;
+}
+
+.slider--progress-50 {
+  --slider-progress: 50%;
+}
+
+.slider--progress-55 {
+  --slider-progress: 55%;
+}
+
+.slider--progress-60 {
+  --slider-progress: 60%;
+}
+
+.slider--progress-65 {
+  --slider-progress: 65%;
+}
+
+.slider--progress-70 {
+  --slider-progress: 70%;
+}
+
+.slider--progress-75 {
+  --slider-progress: 75%;
+}
+
+.slider--progress-80 {
+  --slider-progress: 80%;
+}
+
+.slider--progress-85 {
+  --slider-progress: 85%;
+}
+
+.slider--progress-90 {
+  --slider-progress: 90%;
+}
+
+.slider--progress-95 {
+  --slider-progress: 95%;
+}
+
+.slider--progress-100 {
+  --slider-progress: 100%;
 }
 
 .slider::-webkit-slider-thumb {
@@ -775,7 +872,7 @@
     grid-column: 2;
   }
 
-  .input-area .button[type="submit"] {
+  .input-area__action {
     grid-column: 2;
   }
 
