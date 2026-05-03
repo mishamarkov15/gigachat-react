@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import { mockAssistantReplies, mockMessages } from "../../data/mockData";
 import type { Chat } from "../../types/chat";
-import type { ChatMessage as MessageType } from "../../types/message";
+import { sendChatCompletion } from "../../services/gigachat";
+import { createMessage, useChatStore } from "../../store/chatStore";
 import { Button } from "../ui/Button";
+import { ErrorMessage } from "../ui/ErrorMessage";
 import { InputArea } from "./InputArea";
 import { MessageList } from "./MessageList";
 
@@ -11,61 +12,73 @@ type ChatWindowProps = {
   onOpenSettings: () => void;
 };
 
-const createMessage = (
-  role: MessageType["role"],
-  content: string
-): MessageType => ({
-  id: `${role}-${Date.now()}-${Math.random().toString(16).slice(2)}`,
-  role,
-  content,
-  timestamp: new Intl.DateTimeFormat("ru-RU", {
-    hour: "2-digit",
-    minute: "2-digit"
-  }).format(new Date())
-});
-
 export function ChatWindow({ chat, onOpenSettings }: ChatWindowProps) {
-  const [messages, setMessages] = useState<MessageType[]>(mockMessages);
+  const { addMessage, appendMessage, replaceMessage, settings } = useChatStore();
   const [isLoading, setIsLoading] = useState(false);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [error, setError] = useState("");
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     return () => {
-      if (timeoutRef.current) {
-        clearTimeout(timeoutRef.current);
-      }
+      abortControllerRef.current?.abort();
     };
   }, []);
 
-  const handleSubmit = (content: string) => {
-    if (isLoading) {
+  const handleSubmit = async (content: string) => {
+    if (isLoading || !chat) {
       return;
     }
 
     const userMessage = createMessage("user", content);
+    const assistantMessage = createMessage("assistant", "");
+    const nextMessages = [...chat.messages, userMessage];
+    const abortController = new AbortController();
 
-    setMessages((currentMessages) => [...currentMessages, userMessage]);
+    addMessage(chat.id, userMessage);
+    addMessage(chat.id, assistantMessage);
+    abortControllerRef.current = abortController;
+    setError("");
     setIsLoading(true);
 
-    timeoutRef.current = setTimeout(() => {
-      const replyIndex = Math.floor(Math.random() * mockAssistantReplies.length);
-      const assistantMessage = createMessage(
-        "assistant",
-        mockAssistantReplies[replyIndex]
-      );
+    try {
+      const fullContent = await sendChatCompletion({
+        messages: nextMessages,
+        settings,
+        signal: abortController.signal,
+        onDelta: (delta) => appendMessage(chat.id, assistantMessage.id, delta)
+      });
 
-      setMessages((currentMessages) => [...currentMessages, assistantMessage]);
+      if (!fullContent) {
+        replaceMessage(
+          chat.id,
+          assistantMessage.id,
+          "GigaChat вернул пустой ответ.",
+          true
+        );
+      }
+    } catch (requestError) {
+      if (abortController.signal.aborted) {
+        replaceMessage(
+          chat.id,
+          assistantMessage.id,
+          "Генерация остановлена пользователем."
+        );
+      } else {
+        const message =
+          requestError instanceof Error
+            ? requestError.message
+            : "Не удалось получить ответ от GigaChat.";
+        setError(message);
+        replaceMessage(chat.id, assistantMessage.id, message, true);
+      }
+    } finally {
       setIsLoading(false);
-      timeoutRef.current = null;
-    }, 1400);
+      abortControllerRef.current = null;
+    }
   };
 
   const handleStop = () => {
-    if (timeoutRef.current) {
-      clearTimeout(timeoutRef.current);
-      timeoutRef.current = null;
-    }
-
+    abortControllerRef.current?.abort();
     setIsLoading(false);
   };
 
@@ -88,7 +101,8 @@ export function ChatWindow({ chat, onOpenSettings }: ChatWindowProps) {
           <span className="chat-window__settings-text">Настройки</span>
         </Button>
       </header>
-      <MessageList isLoading={isLoading} messages={messages} />
+      {error && <ErrorMessage text={error} />}
+      <MessageList isLoading={isLoading} messages={chat?.messages ?? []} />
       <InputArea
         isLoading={isLoading}
         onStop={handleStop}

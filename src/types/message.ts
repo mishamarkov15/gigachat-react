@@ -5,4 +5,5 @@ export type ChatMessage = {
   role: MessageRole;
   content: string;
   timestamp: string;
+  error?: boolean;
 };

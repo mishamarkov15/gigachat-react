@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
+import { useChatStore } from "../../store/chatStore";
+import { defaultSettings } from "../../types/settings";
 import { Button } from "../ui/Button";
 import { Slider } from "../ui/Slider";
 import { Toggle } from "../ui/Toggle";
@@ -16,12 +18,24 @@ export function SettingsPanel({
   onClose,
   onThemeChange
 }: SettingsPanelProps) {
-  const [temperature, setTemperature] = useState(0.7);
-  const [topP, setTopP] = useState(0.9);
+  const { settings, updateSettings } = useChatStore();
+  const [draft, setDraft] = useState(settings);
+
+  useEffect(() => {
+    if (isOpen) {
+      setDraft(settings);
+    }
+  }, [isOpen, settings]);
 
   if (!isOpen) {
     return null;
   }
+
+  const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    updateSettings(draft);
+    onClose();
+  };
 
   return (
     <div className="settings-layer">
@@ -30,7 +44,7 @@ export function SettingsPanel({
         className="settings-layer__backdrop"
         onClick={onClose}
       />
-      <aside className="settings-panel">
+      <form className="settings-panel" onSubmit={handleSubmit}>
         <header className="settings-panel__header">
           <h2>Настройки</h2>
           <Button aria-label="Закрыть" onClick={onClose} variant="ghost">
@@ -40,7 +54,12 @@ export function SettingsPanel({
 
         <label className="field">
           <span className="field__label">Модель</span>
-          <select defaultValue="GigaChat-Pro">
+          <select
+            onChange={(event) =>
+              setDraft({ ...draft, model: event.target.value })
+            }
+            value={draft.model}
+          >
             <option>GigaChat</option>
             <option>GigaChat-Plus</option>
             <option>GigaChat-Pro</option>
@@ -52,31 +71,68 @@ export function SettingsPanel({
           label="Temperature"
           max={2}
           min={0}
-          onChange={(event) => setTemperature(Number(event.target.value))}
+          onChange={(event) =>
+            setDraft({ ...draft, temperature: Number(event.target.value) })
+          }
           step={0.1}
-          value={temperature}
+          value={draft.temperature}
         />
         <Slider
           label="Top-P"
           max={1}
           min={0}
-          onChange={(event) => setTopP(Number(event.target.value))}
+          onChange={(event) =>
+            setDraft({ ...draft, topP: Number(event.target.value) })
+          }
           step={0.05}
-          value={topP}
+          value={draft.topP}
         />
 
         <label className="field">
           <span className="field__label">Max Tokens</span>
-          <input defaultValue={2048} min={1} type="number" />
+          <input
+            min={1}
+            onChange={(event) =>
+              setDraft({ ...draft, maxTokens: Number(event.target.value) })
+            }
+            type="number"
+            value={draft.maxTokens}
+          />
+        </label>
+
+        <label className="field">
+          <span className="field__label">Repetition Penalty</span>
+          <input
+            max={2}
+            min={0}
+            onChange={(event) =>
+              setDraft({
+                ...draft,
+                repetitionPenalty: Number(event.target.value)
+              })
+            }
+            step={0.1}
+            type="number"
+            value={draft.repetitionPenalty}
+          />
         </label>
 
         <label className="field">
           <span className="field__label">System Prompt</span>
           <textarea
-            defaultValue="Ты полезный ассистент для учебного проекта."
+            onChange={(event) =>
+              setDraft({ ...draft, systemPrompt: event.target.value })
+            }
             rows={5}
+            value={draft.systemPrompt}
           />
         </label>
+
+        <Toggle
+          checked={draft.stream}
+          label="Streaming"
+          onChange={(stream) => setDraft({ ...draft, stream })}
+        />
 
         <Toggle
           checked={isDarkTheme}
@@ -85,12 +141,18 @@ export function SettingsPanel({
         />
 
         <footer className="settings-panel__footer">
-          <Button onClick={onClose} variant="primary">
+          <Button type="submit" variant="primary">
             Сохранить
           </Button>
-          <Button variant="secondary">Сбросить</Button>
+          <Button
+            onClick={() => setDraft(defaultSettings)}
+            type="button"
+            variant="secondary"
+          >
+            Сбросить
+          </Button>
         </footer>
-      </aside>
+      </form>
     </div>
   );
 }

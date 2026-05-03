@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { mockChats } from "../../data/mockData";
+import { useState } from "react";
+import { useChatStore } from "../../store/chatStore";
 import { ChatWindow } from "../chat/ChatWindow";
 import { SettingsPanel } from "../settings/SettingsPanel";
 import { Sidebar } from "../sidebar/Sidebar";
@@ -11,13 +11,9 @@ type AppLayoutProps = {
 };
 
 export function AppLayout({ isDarkTheme, onThemeChange }: AppLayoutProps) {
-  const [activeChatId, setActiveChatId] = useState(mockChats[0].id);
+  const { activeChat, activeChatId, chats, selectChat } = useChatStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const activeChat = useMemo(
-    () => mockChats.find((chat) => chat.id === activeChatId),
-    [activeChatId]
-  );
 
   return (
     <div className="app-layout">
@@ -31,10 +27,10 @@ export function AppLayout({ isDarkTheme, onThemeChange }: AppLayoutProps) {
       </Button>
       <Sidebar
         activeChatId={activeChatId}
-        chats={mockChats}
+        chats={chats}
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
-        onSelectChat={setActiveChatId}
+        onSelectChat={selectChat}
       />
       <ChatWindow
         chat={activeChat}

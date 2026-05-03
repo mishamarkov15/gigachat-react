@@ -178,6 +178,7 @@
 .chat-item {
   display: flex;
   align-items: center;
+  gap: 8px;
   width: 100%;
   min-height: 64px;
   padding: 10px;
@@ -185,6 +186,16 @@
   border-radius: 8px;
   text-align: left;
   color: var(--color-text);
+  background: transparent;
+}
+
+.chat-item__main {
+  min-width: 0;
+  flex: 1;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  color: inherit;
   background: transparent;
 }
 
@@ -268,8 +279,7 @@
 }
 
 .chat-window h1,
-.settings-panel h2,
-.auth-form h1 {
+.settings-panel h2 {
   margin: 0;
   font-size: 22px;
   line-height: 1.2;
@@ -323,6 +333,12 @@
   background: var(--color-user);
 }
 
+.message__bubble--error {
+  border-color: color-mix(in srgb, var(--color-danger) 40%, var(--color-border));
+  color: var(--color-danger);
+  background: var(--color-danger-soft);
+}
+
 .message__meta {
   display: flex;
   align-items: center;
@@ -369,6 +385,34 @@
   border-radius: 6px;
   padding: 2px 5px;
   background: var(--color-surface-muted);
+}
+
+.message__content pre code {
+  display: block;
+  padding: 0;
+  background: transparent;
+}
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-title {
+  color: var(--color-primary);
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-template-variable {
+  color: #b45309;
+}
+
+:root[data-theme="dark"] .hljs-string,
+:root[data-theme="dark"] .hljs-attr,
+:root[data-theme="dark"] .hljs-template-variable {
+  color: #f6c177;
+}
+
+.chat-window > .error-message {
+  margin: 12px 24px 0;
 }
 
 .typing-indicator {
@@ -684,54 +728,6 @@
   transform: translateX(20px);
 }
 
-.auth-screen {
-  display: grid;
-  min-height: 100vh;
-  place-items: center;
-  padding: 18px;
-}
-
-.auth-form {
-  display: grid;
-  gap: 16px;
-  width: min(440px, 100%);
-  padding: 26px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  background: var(--color-surface);
-  box-shadow: var(--shadow-panel);
-}
-
-.auth-form__brand {
-  color: var(--color-primary);
-  font-weight: 800;
-}
-
-.scope-group {
-  display: grid;
-  gap: 10px;
-  padding: 14px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-}
-
-.scope-group legend {
-  padding: 0 6px;
-  color: var(--color-text-muted);
-  font-weight: 650;
-}
-
-.scope-group label {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  min-width: 0;
-}
-
-.scope-group span {
-  overflow-wrap: anywhere;
-}
-
 .error-message {
   display: flex;
   align-items: center;
@@ -882,10 +878,6 @@
 }
 
 @media (max-width: 420px) {
-  .auth-form {
-    padding: 18px;
-  }
-
   .chat-window__header {
     min-height: 60px;
     padding-left: 64px;

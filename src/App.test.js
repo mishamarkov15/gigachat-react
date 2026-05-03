@@ -7,8 +7,9 @@ jest.mock('react-markdown', () => {
   };
 });
 
-test('renders auth form first', () => {
+test('renders chat interface', () => {
   render(<App />);
-  expect(screen.getByRole('heading', { name: /авторизация/i })).toBeInTheDocument();
-  expect(screen.getByLabelText(/credentials/i)).toBeInTheDocument();
+  expect(screen.getByRole('heading', { name: /новый чат/i })).toBeInTheDocument();
+  expect(screen.getByLabelText(/сообщение/i)).toBeInTheDocument();
+  expect(screen.getAllByRole('button', { name: /новый чат/i }).length).toBeGreaterThan(0);
 });

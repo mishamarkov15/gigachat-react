@@ -4,10 +4,18 @@ import { ChatItem } from "./ChatItem";
 type ChatListProps = {
   activeChatId: string;
   chats: Chat[];
+  onDelete: (id: string) => void;
+  onRename: (id: string, title: string) => void;
   onSelect: (id: string) => void;
 };
 
-export function ChatList({ activeChatId, chats, onSelect }: ChatListProps) {
+export function ChatList({
+  activeChatId,
+  chats,
+  onDelete,
+  onRename,
+  onSelect
+}: ChatListProps) {
   return (
     <ul className="chat-list">
       {chats.map((chat) => (
@@ -15,6 +23,8 @@ export function ChatList({ activeChatId, chats, onSelect }: ChatListProps) {
           chat={chat}
           isActive={chat.id === activeChatId}
           key={chat.id}
+          onDelete={onDelete}
+          onRename={onRename}
           onSelect={onSelect}
         />
       ))}
